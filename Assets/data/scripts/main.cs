@@ -11,12 +11,13 @@ public class main : MonoBehaviour
         Animation anim;
         anim = bvh.ReadBVHFile(Application.dataPath + "/data/input/Mao_na_frente_mcp.bvh");
         //anim = bvh.ReadBVHFile(Application.dataPath + "/data/input/RArmRotTest.bvh");
+        foreach (Joint joint in anim.GetJoints())
+        {
+            Debug.Log(joint.offset);
+        }
         draw_skeleton.Draw(anim);
         draw_skeleton.DrawFrame(0, anim);
-        StartCoroutine(DrawWaiting(anim, 0.5f));
-        
-
-
+        StartCoroutine(DrawWaiting(anim, 0.05f));
     }
 
     // Update is called once per frame

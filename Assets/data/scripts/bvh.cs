@@ -33,7 +33,6 @@ public class bvh : MonoBehaviour
 
     private static Animation GetBVHDataFromFile(string path)
     {
-        string readContents;
         bool flagMotionDataBegin = false;
         Animation anim = new Animation("BVHFile");
 
@@ -52,16 +51,12 @@ public class bvh : MonoBehaviour
 
         Debug.Log(linedContent);
         
-         
-        //string[] linedContent = readContents.Split(new string[] { System.Environment.NewLine }, System.StringSplitOptions.RemoveEmptyEntries);
-        
 
         int numLines = linedContent.Count;
         string line;
 
         // Goes through file string line by line
         int lineCount = 0;
-        // foreach (var line in readContents.Split(new string[] { System.Environment.NewLine }, System.StringSplitOptions.RemoveEmptyEntries))
         while (lineCount < numLines)
         {
             line = linedContent[lineCount];
@@ -116,7 +111,7 @@ public class bvh : MonoBehaviour
         int item = 0;
         foreach (Joint joint in anim.GetJoints())
         {
-            joint.appendLocalTranslation(new Vector3(-System.Convert.ToSingle(line[item], System.Globalization.CultureInfo.InvariantCulture), 
+            joint.appendLocalTranslation(new Vector3(System.Convert.ToSingle(line[item], System.Globalization.CultureInfo.InvariantCulture), 
                                                      System.Convert.ToSingle(line[item + 1], System.Globalization.CultureInfo.InvariantCulture), 
                                                      System.Convert.ToSingle(line[item + 2], System.Globalization.CultureInfo.InvariantCulture)));
             joint.appendLocalRotation(new Vector3(System.Convert.ToSingle(line[item + 4], System.Globalization.CultureInfo.InvariantCulture),
@@ -132,7 +127,9 @@ public class bvh : MonoBehaviour
         Joint joint = new Joint(name, anim);
         joint.depth = depth;
         string[] aux_line = content[lineCount + 2].Split(' ', System.StringSplitOptions.RemoveEmptyEntries);
-        joint.setOffset(new Vector3(System.Convert.ToSingle(aux_line[1]), System.Convert.ToSingle(aux_line[2]), System.Convert.ToSingle(aux_line[3])));
+        joint.setOffset(new Vector3(System.Convert.ToSingle(aux_line[1], System.Globalization.CultureInfo.InvariantCulture),
+                                    System.Convert.ToSingle(aux_line[2], System.Globalization.CultureInfo.InvariantCulture),
+                                    System.Convert.ToSingle(aux_line[3], System.Globalization.CultureInfo.InvariantCulture)));
         aux_line = content[lineCount + 3].Split(' ', System.StringSplitOptions.RemoveEmptyEntries);
         joint.setChannels(System.Convert.ToInt32(aux_line[1]), aux_line[2], aux_line[3], aux_line[4], aux_line[5], aux_line[6], aux_line[7]);
 
@@ -150,11 +147,9 @@ public class bvh : MonoBehaviour
         while (!done)
         {
             lineCount += 1;
-            //Precisa ir caminhando e procurando um fechar!!
+            //Goes line by line looking for the joint's closure
             if (content[lineCount].Contains("}"))
             {
-                //Debug.Log(name+" Done");
-                //int close = (content[lineCount].Split(' ').Length - 1) / 2;
                 done = true;
             }
             else if (content[lineCount].Contains("JOINT"))

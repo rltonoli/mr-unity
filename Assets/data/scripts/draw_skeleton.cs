@@ -46,7 +46,8 @@ public class draw_skeleton : MonoBehaviour
         GameObject rootObj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         rootObj.name = anim.root.name;
         rootObj.transform.SetParent(empty_holder.transform);
-        rootObj.transform.localPosition = anim.root.localTranslation[0];
+        //rootObj.transform.localPosition = anim.root.localTranslation[0];
+        rootObj.transform.localPosition = anim.root.offset;
         draw_listofjoints.Add(rootObj);
 
         // Start to iterate creating every other joint
@@ -71,7 +72,8 @@ public class draw_skeleton : MonoBehaviour
         draw_listofjoints.Add(childObj);
         childObj.name = child.name;
         childObj.transform.SetParent(parent.transform);
-        childObj.transform.localPosition = child.localTranslation[0];
+        //childObj.transform.localPosition = child.localTranslation[0];
+        childObj.transform.localPosition = child.offset;
         //Adds a reference to the joint GameObject in the respective Joint
         child.gameobject_joint = childObj;
 
@@ -80,7 +82,8 @@ public class draw_skeleton : MonoBehaviour
         bone.name = "_bone" + parent.name;
         bone.transform.SetParent(parent.transform);
         float boneSize = Vector3.Distance(new Vector3(0.0f,0.0f,0.0f), childObj.transform.localPosition);
-        bone.transform.localPosition = child.localTranslation[0] / 2;
+        //bone.transform.localPosition = child.localTranslation[0] / 2;
+        bone.transform.localPosition = child.offset / 2;
         bone.transform.localScale = new Vector3(1, boneSize / 2, 1);
         //Adds a reference to the bone GameObject to a list called "bones" in the parent's Joint refenrece.
         child.parent.bones.Add(bone);
@@ -108,15 +111,27 @@ public class draw_skeleton : MonoBehaviour
     public static void DrawFrame(int frame, Animation anim)
     {
         int n = draw_listofjoints.Count;
+        draw_listofjoints[0].transform.localPosition = anim.root.localTranslation[frame];
         for (int i = 0; i < n; i++)
         {
-            //(draw_listofjoints[i].name != anim.listofjoints[i].name)
-            //draw_listofjoints[i].transform.localRotation = Quaternion.Euler(anim.listofjoints[i].localEulerAngles[frame]);
-            draw_listofjoints[i].transform.localEulerAngles = anim.listofjoints[i].localEulerAngles[frame];
+            draw_listofjoints[i].transform.localRotation = BVH2UnityRotation(anim.listofjoints[i].localEulerAngles[frame]);
         }
+        //Debug.Log(anim.GetJoint("RightArm").gameobject_joint.transform.localEulerAngles);
+        //Debug.Log(anim.GetJoint("RightArm").localEulerAngles[frame]);
+    }
 
-        Debug.Log(anim.GetJoint("RightArm").gameobject_joint.transform.localEulerAngles);
-        Debug.Log(anim.GetJoint("RightArm").localEulerAngles[frame]);
+    public static Quaternion BVH2UnityRotation(Vector3 euler)
+    {
+        // BVH's x+ axis is Unity's left (x-)
+        var xRot = Quaternion.AngleAxis(-euler.x, Vector3.left);
+        // Unity & BVH agree on the y & z axes
+        //var yRot = Quaternion.AngleAxis(-euler.y, Vector3.up);
+        //var zRot = Quaternion.AngleAxis(-euler.z, Vector3.forward);
+        var yRot = Quaternion.AngleAxis(euler.y, Vector3.up);
+        var zRot = Quaternion.AngleAxis(euler.z, Vector3.forward);
+
+        return zRot * xRot * yRot;
+
     }
 
 }
