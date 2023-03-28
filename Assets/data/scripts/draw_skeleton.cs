@@ -5,22 +5,13 @@ using UnityEngine;
 
 public class draw_skeleton : MonoBehaviour
 {
-    public static float Scale = 1/150f;
-    public static List<GameObject> draw_listofjoints = new List<GameObject>();
+    public float Scale = 1/150f;
+    public List<GameObject> draw_listofjoints = new List<GameObject>();
+    public Animation anim;
+    public SkeletonMap skeletonMap;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    private static void TestJoints(Animation anim)
+    private void TestJoints(Animation anim)
     {
         int n = draw_listofjoints.Count;
         for (int i=0; i<n; i++)
@@ -34,8 +25,16 @@ public class draw_skeleton : MonoBehaviour
         }
     }
 
-    public static void Draw(Animation anim)
+    public void Draw(Animation anim)
     {
+
+        if (this.anim != null)
+        {
+            Debug.Log("Skeleton already drawing an animation. Please instantiate another skeleton.");
+            return;
+        }
+
+        this.anim = anim;
 
         // Create an empty object to accomodate the skeleton
         GameObject empty_holder = new GameObject("Input skeleton");
@@ -44,25 +43,24 @@ public class draw_skeleton : MonoBehaviour
 
         // Create the root
         GameObject rootObj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        rootObj.name = anim.root.name;
+        rootObj.name = this.anim.root.name;
         rootObj.transform.SetParent(empty_holder.transform);
         //rootObj.transform.localPosition = anim.root.localTranslation[0];
-        rootObj.transform.localPosition = anim.root.offset;
+        rootObj.transform.localPosition = this.anim.root.offset;
         draw_listofjoints.Add(rootObj);
 
         // Start to iterate creating every other joint
-        foreach (Joint child in anim.root.children)
+        foreach (Joint child in this.anim.root.children)
         {
             GameObject dummy = createObjects(rootObj, child);
         }
 
         //empty_holder.transform.localScale = new Vector3(Scale, Scale, Scale);
 
-        TestJoints(anim);
-
+        TestJoints(this.anim);
     }
 
-    private static GameObject createObjects(GameObject parent, Joint child)
+    private GameObject createObjects(GameObject parent, Joint child)
     {
         //Receives the GameObject that represents the parent joint and the Joint child
 
@@ -84,7 +82,7 @@ public class draw_skeleton : MonoBehaviour
         float boneSize = Vector3.Distance(new Vector3(0.0f,0.0f,0.0f), childObj.transform.localPosition);
         //bone.transform.localPosition = child.localTranslation[0] / 2;
         bone.transform.localPosition = child.offset / 2;
-        bone.transform.localScale = new Vector3(1, boneSize / 2, 1);
+        bone.transform.localScale = new Vector3(0.6f, boneSize / 2, 0.6f);
         //Adds a reference to the bone GameObject to a list called "bones" in the parent's Joint refenrece.
         child.parent.bones.Add(bone);
 
@@ -108,27 +106,27 @@ public class draw_skeleton : MonoBehaviour
         return childObj;
     }
 
-    public static void DrawFrame(int frame, Animation anim)
+    public void DrawFrame(int frame)
     {
         int n = draw_listofjoints.Count;
-        draw_listofjoints[0].transform.localPosition = anim.root.localTranslation[frame];
+        draw_listofjoints[0].transform.localPosition = this.anim.root.localTranslation[frame];
         for (int i = 0; i < n; i++)
         {
-            draw_listofjoints[i].transform.localRotation = BVH2UnityRotation(anim.listofjoints[i].localEulerAngles[frame]);
+            draw_listofjoints[i].transform.localRotation = BVH2UnityRotation(this.anim.listofjoints[i].localEulerAngles[frame]);
         }
         //Debug.Log(anim.GetJoint("RightArm").gameobject_joint.transform.localEulerAngles);
         //Debug.Log(anim.GetJoint("RightArm").localEulerAngles[frame]);
     }
 
-    public static Quaternion BVH2UnityRotation(Vector3 euler)
+    public Quaternion BVH2UnityRotation(Vector3 euler)
     {
         // BVH's x+ axis is Unity's left (x-)
         var xRot = Quaternion.AngleAxis(-euler.x, Vector3.left);
         // Unity & BVH agree on the y & z axes
-        //var yRot = Quaternion.AngleAxis(-euler.y, Vector3.up);
-        //var zRot = Quaternion.AngleAxis(-euler.z, Vector3.forward);
-        var yRot = Quaternion.AngleAxis(euler.y, Vector3.up);
-        var zRot = Quaternion.AngleAxis(euler.z, Vector3.forward);
+        var yRot = Quaternion.AngleAxis(-euler.y, Vector3.up);
+        var zRot = Quaternion.AngleAxis(-euler.z, Vector3.forward);
+        //var yRot = Quaternion.AngleAxis(euler.y, Vector3.up);
+        //var zRot = Quaternion.AngleAxis(euler.z, Vector3.forward);
 
         return zRot * xRot * yRot;
 

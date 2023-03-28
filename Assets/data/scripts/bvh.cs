@@ -111,7 +111,7 @@ public class bvh : MonoBehaviour
         int item = 0;
         foreach (Joint joint in anim.GetJoints())
         {
-            joint.appendLocalTranslation(new Vector3(System.Convert.ToSingle(line[item], System.Globalization.CultureInfo.InvariantCulture), 
+            joint.appendLocalTranslation(new Vector3(-System.Convert.ToSingle(line[item], System.Globalization.CultureInfo.InvariantCulture), 
                                                      System.Convert.ToSingle(line[item + 1], System.Globalization.CultureInfo.InvariantCulture), 
                                                      System.Convert.ToSingle(line[item + 2], System.Globalization.CultureInfo.InvariantCulture)));
             joint.appendLocalRotation(new Vector3(System.Convert.ToSingle(line[item + 4], System.Globalization.CultureInfo.InvariantCulture),
@@ -127,7 +127,7 @@ public class bvh : MonoBehaviour
         Joint joint = new Joint(name, anim);
         joint.depth = depth;
         string[] aux_line = content[lineCount + 2].Split(' ', System.StringSplitOptions.RemoveEmptyEntries);
-        joint.setOffset(new Vector3(System.Convert.ToSingle(aux_line[1], System.Globalization.CultureInfo.InvariantCulture),
+        joint.setOffset(new Vector3(-System.Convert.ToSingle(aux_line[1], System.Globalization.CultureInfo.InvariantCulture),
                                     System.Convert.ToSingle(aux_line[2], System.Globalization.CultureInfo.InvariantCulture),
                                     System.Convert.ToSingle(aux_line[3], System.Globalization.CultureInfo.InvariantCulture)));
         aux_line = content[lineCount + 3].Split(' ', System.StringSplitOptions.RemoveEmptyEntries);
