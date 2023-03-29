@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting.FullSerializer.Internal;
 using UnityEngine;
 
-public class SkeletonMap
+public class SkeletonMap : MonoBehaviour
 {
     public Animation anim;
     private bool modelflag = false;
@@ -18,16 +17,7 @@ public class SkeletonMap
                                             "RightUpLeg", "RightLeg", "RightFoot",
                                             "LeftUpLeg","LeftLeg", "LeftFoot"};
 
-    public SkeletonMap(Animation anim) 
-    {
-        this.anim = anim;
-    }
-
-    public SkeletonMap(Animation anim, string model) 
-    { 
-        this.anim = anim;
-        _ = SetSkeletonModel(model);
-    }
+    public Dictionary<string, List<Joint>> bones = new Dictionary<string, List<Joint>>();
 
     public bool SetSkeletonModel(string model)
     {
@@ -49,7 +39,7 @@ public class SkeletonMap
                 jointnames = new List<string>
                                           { "root",
                                             "spine05",
-                                            "spine04","spine03","Spine02","Spine01",
+                                            "spine04","spine03","spine02","spine01",
                                             "neck01", "neck02", "head",
                                             "clavicle.R", "upperarm01.R", "lowerarm01.R", "wrist.R",
                                             "clavicle.L", "upperarm01.L", "lowerarm01.L", "wrist.L",
@@ -75,9 +65,39 @@ public class SkeletonMap
             else
                 Debug.Log("Could not find joint: " + this.keynames[i]);
         }
+        GenerateBones();
 
         this.modelflag = true;
         return this.modelflag;
+    }
+
+    private void GenerateBones()
+    {
+        // Generate the bones to be aligned
+        // TODO: There should be an alignment for the hips, the facing direction (eg, imagine the line from LeftUpLeg to RightUpLeg)
+
+        bones.Add("Spine" , new List<Joint> { keyValuePairs["Hips"], keyValuePairs["Spine"] } );
+        bones.Add("Spine1", new List<Joint> { keyValuePairs["Spine"], keyValuePairs["Spine1"] });
+        bones.Add("Spine2", new List<Joint> { keyValuePairs["Spine1"], keyValuePairs["Spine2"] });
+        bones.Add("Spine3", new List<Joint> { keyValuePairs["Spine2"], keyValuePairs["Spine3"] });
+
+        bones.Add("Neck", new List<Joint> { keyValuePairs["Spine3"], keyValuePairs["Neck"] });
+        bones.Add("Neck1", new List<Joint> { keyValuePairs["Neck"], keyValuePairs["Neck1"] });
+        bones.Add("Head", new List<Joint> { keyValuePairs["Neck1"], keyValuePairs["Head"] });
+
+        //bones.Add("RightClavicle", new List<Joint> { keyValuePairs["RightShoulder"], keyValuePairs["RightArm"] });
+        bones.Add("RightArm", new List<Joint> { keyValuePairs["RightArm"], keyValuePairs["RightForeArm"] });
+        bones.Add("RightForeArm", new List<Joint> { keyValuePairs["RightForeArm"], keyValuePairs["RightHand"] });
+
+        //bones.Add("LeftClavicle", new List<Joint> { keyValuePairs["LeftShoulder"], keyValuePairs["LeftArm"] });
+        bones.Add("LeftArm", new List<Joint> { keyValuePairs["LeftArm"], keyValuePairs["LeftForeArm"] });
+        bones.Add("LeftForeArm", new List<Joint> { keyValuePairs["LeftForeArm"], keyValuePairs["LeftHand"] });
+
+        bones.Add("RightUpLeg", new List<Joint> { keyValuePairs["RightUpLeg"], keyValuePairs["RightLeg"] });
+        bones.Add("RightLeg", new List<Joint> { keyValuePairs["RightLeg"], keyValuePairs["RightFoot"] });
+
+        bones.Add("LeftUpLeg", new List<Joint> { keyValuePairs["LeftUpLeg"], keyValuePairs["LeftLeg"] });
+        bones.Add("LeftLeg", new List<Joint> { keyValuePairs["LeftLeg"], keyValuePairs["LeftFoot"] });
     }
 
 

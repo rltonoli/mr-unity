@@ -129,7 +129,6 @@ public class draw_skeleton : MonoBehaviour
         //var zRot = Quaternion.AngleAxis(euler.z, Vector3.forward);
 
         return zRot * xRot * yRot;
-
     }
 
 }

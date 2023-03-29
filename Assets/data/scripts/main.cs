@@ -3,10 +3,43 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
+// Aqui talvez tenha uma mudança de perspectiva:
+// Eu acredito que preciso (sempre que possível) trabalhar em cima dos dados contidos na Unity - dentro do *3D*
+// Razões a favor disso:
+// 1. Só assim vou poder me aproveitar de métodos tipo .GetPosition() do que estou observando no 3D
+// 2. O modelo/esqueleto/dados target (tgt) estão presentes no 3D e NÃO estão disponíveis no sistema de coordenadas do BVH, portanto vou ter que "traduzir" eles pro sistemas do BVH e aí conseguir calcular tudo
+// 3. Todo update e cálculo que eu fizer no sistema do BVH terei que traduzir para o sistema do Unity, seja dos dados de source quanto dos dados de target.
+//
+// Como posso fazer isso:
+// 1. Na classe Joint posso adicionar uma referência para o GameObject criado para representar essa junta;
+//  1.1 dessa forma, o SkeletonMap deveria retornar referências para o GameObject da junta ao invés do Joint (questionável?)
+//  OU
+//  1.2 SkeletonMap continuaria a retornar referências de Joint mas toda vez eu utilizo a referência ao GameObject, tanto do target quanto do source
+//  1.2.1 O GameObject iria se mover de maneira "independente" ao longo dos frames 
+//
+//  Razões a favor disso:
+//      - Pouquíssima alteração no código ou na metodologia. Basta eu trocar joint.method() por joint.Object.method()
+//      - 
+//
+// 2. (Jeito maluco - exercício) Não utilizar nada da classe Joint
+//  - Acho que não é viável pois eu perco a camada de abstração que consegue "caminhar" pela estrutura.
+//  - Além disso, eu perco a "base" que já está criada para que, no futuro, eu faça a tradução Unity-BVH e tenha possibilidade de salvar o BVH.
+//
+//
+// Observações aleatórias:
+// - Toda hora estou pensando que eu quero usar o draw_skeleton para um modelo (target) mas acho que isso não deveria acontecer;
+//   não tem razão para fazer isso, o modelo está ali já com os GameObjects criados e nas posições corretas, é possível imprimir tudo que eu quero a partir do modelo.
+//   O que faz muito mais sentido do que criar um esqueleto separado para representar passos intermediários do processo.
+// - O draw_skeleton, para targets, deve funcionar como um adendo/feature e não como a referência principal dos cálculos.
+// - O draw_skeleton, para o source, É, de fato, o BVH. É o BVH traduzido para o Unity e com ele devo trabalhar. NÃO SE ESQUECER.
+
+
 public class main : MonoBehaviour
 {
 
-    public GameObject characterModel;
+    public GameObject talitaModel;
 
     // Start is called before the first frame update
     void Start()
@@ -14,23 +47,32 @@ public class main : MonoBehaviour
         Animation anim;
         anim = bvh.ReadBVHFile(Application.dataPath + "/data/input/Mao_na_frente_mcp.bvh");
         //anim = bvh.ReadBVHFile(Application.dataPath + "/data/input/RArmRotTest.bvh");
-        SkeletonMap skelmap_anim = new SkeletonMap(anim, "Vicon");
+        GameObject objMappedSrcSkeleton = new GameObject("Mapped Source Skeleton");
+        SkeletonMap mapSrcSkeleton = objMappedSrcSkeleton.AddComponent<SkeletonMap>();
+        mapSrcSkeleton.anim = anim;
+        mapSrcSkeleton.SetSkeletonModel("Vicon");
 
         Animation anim_talita;
-        if (characterModel != null)
+        if (talitaModel != null)
         {
-            anim_talita = model.GenerateFromModel("Talita", characterModel);
-            SkeletonMap skelmap_talita = new SkeletonMap(anim_talita, "Talita");
+            anim_talita = model.GenerateFromModel("Talita", talitaModel);
+            SkeletonMap mapTalita = talitaModel.AddComponent<SkeletonMap>();
+            mapTalita.anim = anim_talita;
+            mapTalita.SetSkeletonModel("Talita");
+            retargeting mrTalita = talitaModel.AddComponent<retargeting>();
+            mrTalita.BoneRetargeting(mapSrcSkeleton, mapTalita);
         }
+        else
+            Debug.Log("No Talita model assigned");
 
 
-        GameObject srcSkeletonObj = new GameObject("Source Skeleton");
-        draw_skeleton srcSkeleton = srcSkeletonObj.AddComponent<draw_skeleton>();
-        srcSkeleton.Draw(anim);
+        GameObject objSrcSkeleton = new GameObject("Source Skeleton");
+        draw_skeleton drawSrcSkeleton = objSrcSkeleton.AddComponent<draw_skeleton>();
+        drawSrcSkeleton.Draw(anim);
 
         // draw_skeleton srcSkeleton = new draw_skeleton(anim);
 
-        StartCoroutine(DrawWaiting(srcSkeleton, 0.01f));
+        //StartCoroutine(DrawWaiting(drawSrcSkeleton, 0.01f));
     }
 
     // Update is called once per frame

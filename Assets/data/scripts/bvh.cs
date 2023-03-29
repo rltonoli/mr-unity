@@ -47,10 +47,7 @@ public class bvh : MonoBehaviour
                 linedContent.Add(fileline);
             }
             
-        }
-
-        Debug.Log(linedContent);
-        
+        }       
 
         int numLines = linedContent.Count;
         string line;
