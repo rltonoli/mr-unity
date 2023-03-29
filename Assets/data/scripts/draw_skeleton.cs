@@ -47,6 +47,7 @@ public class draw_skeleton : MonoBehaviour
         rootObj.transform.SetParent(empty_holder.transform);
         //rootObj.transform.localPosition = anim.root.localTranslation[0];
         rootObj.transform.localPosition = this.anim.root.offset;
+        this.anim.root.Object = rootObj;
         draw_listofjoints.Add(rootObj);
 
         // Start to iterate creating every other joint
@@ -73,7 +74,7 @@ public class draw_skeleton : MonoBehaviour
         //childObj.transform.localPosition = child.localTranslation[0];
         childObj.transform.localPosition = child.offset;
         //Adds a reference to the joint GameObject in the respective Joint
-        child.gameobject_joint = childObj;
+        child.Object = childObj;
 
         //Creates the bone GameObject given the parent's and the child's sphere GameObjects
         GameObject bone = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
@@ -109,11 +110,13 @@ public class draw_skeleton : MonoBehaviour
     public void DrawFrame(int frame)
     {
         int n = draw_listofjoints.Count;
-        draw_listofjoints[0].transform.localPosition = this.anim.root.localTranslation[frame];
+        
         for (int i = 0; i < n; i++)
         {
+            this.anim.listofjoints[i].previousRotation = draw_listofjoints[i].transform.rotation;
             draw_listofjoints[i].transform.localRotation = BVH2UnityRotation(this.anim.listofjoints[i].localEulerAngles[frame]);
         }
+        draw_listofjoints[0].transform.localPosition = this.anim.root.localTranslation[frame];
         //Debug.Log(anim.GetJoint("RightArm").gameobject_joint.transform.localEulerAngles);
         //Debug.Log(anim.GetJoint("RightArm").localEulerAngles[frame]);
     }

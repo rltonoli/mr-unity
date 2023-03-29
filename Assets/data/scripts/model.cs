@@ -30,6 +30,7 @@ public class model : MonoBehaviour
 
         Joint joint = new Joint(childObject.name, anim);
         joint.depth = depth;
+        joint.Object = childObject;
 
         // TODO: Test this offset 
         Quaternion currentRotation = childObject.transform.localRotation;

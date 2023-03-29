@@ -256,6 +256,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22c101aedf3ed1e4b87ec635e18e3fa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Scale: 0.006666667
+  draw_listofjoints: []
+  skeletonMap: {fileID: 0}
 --- !u!114 &702006525
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -268,7 +271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53353224b37ea3a42a4700e03402b397, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterModel: {fileID: 852372584}
+  talitaModel: {fileID: 852372584}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0

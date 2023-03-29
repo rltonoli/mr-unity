@@ -5,6 +5,7 @@ using UnityEngine;
 public class SkeletonMap : MonoBehaviour
 {
     public Animation anim;
+    public string model;
     private bool modelflag = false;
     public Dictionary<string, Joint> keyValuePairs = new Dictionary<string, Joint>();
     public List<string> keynames = new List<string>
@@ -18,9 +19,9 @@ public class SkeletonMap : MonoBehaviour
                                             "LeftUpLeg","LeftLeg", "LeftFoot"};
 
     public Dictionary<string, List<Joint>> bones = new Dictionary<string, List<Joint>>();
-
     public bool SetSkeletonModel(string model)
     {
+        
         List<string> jointnames = new List<string>();
         switch (model)
         {
@@ -68,6 +69,7 @@ public class SkeletonMap : MonoBehaviour
         GenerateBones();
 
         this.modelflag = true;
+        this.model = model;
         return this.modelflag;
     }
 

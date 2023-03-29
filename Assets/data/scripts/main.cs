@@ -52,27 +52,31 @@ public class main : MonoBehaviour
         mapSrcSkeleton.anim = anim;
         mapSrcSkeleton.SetSkeletonModel("Vicon");
 
-        Animation anim_talita;
-        if (talitaModel != null)
-        {
-            anim_talita = model.GenerateFromModel("Talita", talitaModel);
-            SkeletonMap mapTalita = talitaModel.AddComponent<SkeletonMap>();
-            mapTalita.anim = anim_talita;
-            mapTalita.SetSkeletonModel("Talita");
-            retargeting mrTalita = talitaModel.AddComponent<retargeting>();
-            mrTalita.BoneRetargeting(mapSrcSkeleton, mapTalita);
-        }
-        else
-            Debug.Log("No Talita model assigned");
-
-
+        // Draw is responsible to "translate" the BVH coordinate system to Unity's system
         GameObject objSrcSkeleton = new GameObject("Source Skeleton");
         draw_skeleton drawSrcSkeleton = objSrcSkeleton.AddComponent<draw_skeleton>();
         drawSrcSkeleton.Draw(anim);
 
+
+        Animation anim_talita;
+        if (talitaModel == null)
+        {
+            Debug.Log("No Talita model assigned");
+            return;
+        }
+        
+        anim_talita = model.GenerateFromModel("Talita", talitaModel);
+        SkeletonMap mapTalita = talitaModel.AddComponent<SkeletonMap>();
+        mapTalita.anim = anim_talita;
+        mapTalita.SetSkeletonModel("Talita");
+        retargeting mrTalita = talitaModel.AddComponent<retargeting>();
+        //mrTalita.BoneRetargeting(mapSrcSkeleton, mapTalita);
+
         // draw_skeleton srcSkeleton = new draw_skeleton(anim);
 
-        //StartCoroutine(DrawWaiting(drawSrcSkeleton, 0.01f));
+        anim.printHierarchy();
+
+        StartCoroutine(DrawWaiting(drawSrcSkeleton, mrTalita, mapSrcSkeleton, mapTalita, 0.01f));
     }
 
     // Update is called once per frame
@@ -82,12 +86,13 @@ public class main : MonoBehaviour
     }
 
 
-    IEnumerator DrawWaiting(draw_skeleton skel, float wait)
+    IEnumerator DrawWaiting(draw_skeleton skel, retargeting mr_talita, SkeletonMap mapSrcSkeleton, SkeletonMap mapTalita, float wait)
     {
         for (int i = 0; i < skel.anim.frames; i++)
         {
             Debug.Log(i);
             skel.DrawFrame(i);
+            mr_talita.WorldRotRetargeting(mapSrcSkeleton, mapTalita, i);
             yield return new WaitForSeconds(wait);
         }
     }

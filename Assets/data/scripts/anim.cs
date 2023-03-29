@@ -73,7 +73,10 @@ public class Joint
 
     // Used in draw_skeleton
     public List<GameObject> bones = new List<GameObject>();
-    public GameObject gameobject_joint = null;
+
+    public GameObject Object = null;
+
+    public Quaternion previousRotation; //From transform
 
     public Joint(string name, Animation anim)
     {
