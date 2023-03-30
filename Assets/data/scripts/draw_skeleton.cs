@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor.Animations;
 using UnityEngine;
 
+//TODO: Maybe change this name to bvh_skeleton
 public class draw_skeleton : MonoBehaviour
 {
     public float Scale = 1/150f;
@@ -25,7 +26,7 @@ public class draw_skeleton : MonoBehaviour
         }
     }
 
-    public void Draw(Animation anim)
+    public void Draw(Animation anim, GameObject holder)
     {
 
         if (this.anim != null)
@@ -37,14 +38,14 @@ public class draw_skeleton : MonoBehaviour
         this.anim = anim;
 
         // Create an empty object to accomodate the skeleton
-        GameObject empty_holder = new GameObject("Input skeleton");
-        empty_holder.transform.position = new Vector3(0, 0, 0);
+        //GameObject empty_holder = new GameObject("Input skeleton");
+        //empty_holder.transform.position = new Vector3(0, 0, 0);
         
 
         // Create the root
         GameObject rootObj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         rootObj.name = this.anim.root.name;
-        rootObj.transform.SetParent(empty_holder.transform);
+        rootObj.transform.SetParent(holder.transform);
         //rootObj.transform.localPosition = anim.root.localTranslation[0];
         rootObj.transform.localPosition = this.anim.root.offset;
         this.anim.root.Object = rootObj;
@@ -119,6 +120,14 @@ public class draw_skeleton : MonoBehaviour
         draw_listofjoints[0].transform.localPosition = this.anim.root.localTranslation[frame];
         //Debug.Log(anim.GetJoint("RightArm").gameobject_joint.transform.localEulerAngles);
         //Debug.Log(anim.GetJoint("RightArm").localEulerAngles[frame]);
+
+        Surface surface = GetComponent<Surface>();
+        if (surface != null )
+        {
+            surface.DrawFrame();
+        }
+
+
     }
 
     public Quaternion BVH2UnityRotation(Vector3 euler)

@@ -44,39 +44,52 @@ public class main : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Animation anim;
-        anim = bvh.ReadBVHFile(Application.dataPath + "/data/input/Mao_na_frente_mcp.bvh");
-        //anim = bvh.ReadBVHFile(Application.dataPath + "/data/input/RArmRotTest.bvh");
-        GameObject objMappedSrcSkeleton = new GameObject("Mapped Source Skeleton");
-        SkeletonMap mapSrcSkeleton = objMappedSrcSkeleton.AddComponent<SkeletonMap>();
-        mapSrcSkeleton.anim = anim;
-        mapSrcSkeleton.SetSkeletonModel("Vicon");
 
-        // Draw is responsible to "translate" the BVH coordinate system to Unity's system
-        GameObject objSrcSkeleton = new GameObject("Source Skeleton");
-        draw_skeleton drawSrcSkeleton = objSrcSkeleton.AddComponent<draw_skeleton>();
-        drawSrcSkeleton.Draw(anim);
-
-
+        // Check if a model was assigned as the target to motion retargeting
         Animation anim_talita;
         if (talitaModel == null)
         {
             Debug.Log("No Talita model assigned");
             return;
         }
-        
+
+        // Reads a BVH to be used as source to motion retargeting
+        Animation anim;
+        anim = bvh.ReadBVHFile(Application.dataPath + "/data/input/Mao_na_frente_mcp.bvh");
+        //anim = bvh.ReadBVHFile(Application.dataPath + "/data/input/RArmRotTest.bvh");
+
+
+        // Draw is responsible to "translate" the BVH coordinate system to Unity's system
+        // Creates a skeleton that represents the source animation (the BVH file)
+        GameObject objSrcSkeleton = new GameObject("Source Skeleton");
+        objSrcSkeleton.transform.position = Vector3.zero;
+        draw_skeleton drawSrcSkeleton = objSrcSkeleton.AddComponent<draw_skeleton>();
+        drawSrcSkeleton.Draw(anim, objSrcSkeleton);
+
+        // Creates the mapping of the source skeleton
+        //GameObject objMappedSrcSkeleton = new GameObject("Mapped Source Skeleton");
+        SkeletonMap mapSrcSkeleton = objSrcSkeleton.AddComponent<SkeletonMap>();
+        mapSrcSkeleton.anim = anim;
+        mapSrcSkeleton.SetSkeletonModel("Vicon");
+
+        // Reads the surface data of the source animation
+        Surface srcSurface = objSrcSkeleton.AddComponent<Surface>();
+        srcSurface.ReadSourceSurfaceFile(Application.dataPath + "/data/surface/mocap_surface_rodolfo.csv");
+        srcSurface.DrawSurface();
+
+
+        // Instantiate the model as an Animation object ("reads" the model/character)
         anim_talita = model.GenerateFromModel("Talita", talitaModel);
+        // Creates the mapping of the target skeleton
         SkeletonMap mapTalita = talitaModel.AddComponent<SkeletonMap>();
         mapTalita.anim = anim_talita;
         mapTalita.SetSkeletonModel("Talita");
+        // Adds the retargeting component
         retargeting mrTalita = talitaModel.AddComponent<retargeting>();
-        //mrTalita.BoneRetargeting(mapSrcSkeleton, mapTalita);
 
-        // draw_skeleton srcSkeleton = new draw_skeleton(anim);
 
-        anim.printHierarchy();
 
-        StartCoroutine(DrawWaiting(drawSrcSkeleton, mrTalita, mapSrcSkeleton, mapTalita, 0.01f));
+        //StartCoroutine(DrawWaiting(drawSrcSkeleton, mrTalita, mapSrcSkeleton, mapTalita, 0.01f));
     }
 
     // Update is called once per frame
