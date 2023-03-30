@@ -45,13 +45,25 @@ public class retargeting : MonoBehaviour
         // Here I will assume that the srcSkeleton is at the TPose in the first frame (palm of the hands facing down)
         if ((tgtMap.model=="Talita") && (frame == 0)) 
         {
+            //Right hand
             Vector3 hand = tgtMap.anim.GetJoint("wrist.R").Object.transform.position;
             Vector3 finger1 = tgtMap.anim.GetJoint("finger2-1.R").Object.transform.position;
             Vector3 finger2 = tgtMap.anim.GetJoint("finger5-1.R").Object.transform.position;
             Vector3 handBone1 = finger1 - hand;
             Vector3 handBone2 = finger2 - hand;
-            Vector3 handPalmDirection = Vector3.Cross(handBone1, handBone2);
+            Vector3 handPalmDirection = Vector3.Cross(handBone2, handBone1);
+            rotation.SetFromToRotation(handPalmDirection, Vector3.down);
+            tgtMap.anim.GetJoint("wrist.R").Object.transform.rotation = rotation * tgtMap.anim.GetJoint("wrist.R").Object.transform.rotation;
 
+            //Left hand
+            hand = tgtMap.anim.GetJoint("wrist.L").Object.transform.position;
+            finger1 = tgtMap.anim.GetJoint("finger2-1.L").Object.transform.position;
+            finger2 = tgtMap.anim.GetJoint("finger5-1.L").Object.transform.position;
+            handBone1 = finger1 - hand;
+            handBone2 = finger2 - hand;
+            handPalmDirection = Vector3.Cross(handBone1, handBone2);
+            rotation.SetFromToRotation(handPalmDirection, Vector3.down);
+            tgtMap.anim.GetJoint("wrist.L").Object.transform.rotation = rotation * tgtMap.anim.GetJoint("wrist.L").Object.transform.rotation;
 
 
         }
@@ -80,6 +92,17 @@ public class retargeting : MonoBehaviour
             relativeRotation = currentRotation * Quaternion.Inverse(previousRotation);
 
             tgtMap.bones[key][0].Object.transform.rotation = relativeRotation * tgtMap.bones[key][0].Object.transform.rotation;
+
+            // Also rotate the hand joints
+            if ((key == "RightForeArm") || (key == "LeftForeArm"))
+            {
+                previousRotation = srcMap.bones[key][1].previousRotation;
+                currentRotation = srcMap.bones[key][1].Object.transform.rotation;
+                relativeRotation = currentRotation * Quaternion.Inverse(previousRotation);
+
+                tgtMap.bones[key][1].Object.transform.rotation = relativeRotation * tgtMap.bones[key][1].Object.transform.rotation;
+            }
+
         }
 
          
