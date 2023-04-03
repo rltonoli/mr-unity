@@ -105,6 +105,7 @@ public class SkeletonMap : MonoBehaviour
 
     public Joint GetJoint(string jointname)
     {
+        // Returns the joint given a map_joint_name
         if (this.keyValuePairs.Count > 0)
         {
             Joint joint = this.keyValuePairs[jointname];

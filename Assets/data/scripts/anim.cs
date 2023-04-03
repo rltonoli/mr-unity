@@ -53,6 +53,21 @@ public class Animation
         }
     }
 
+    public void rescale(int factor)
+    {
+        foreach (Joint joint in this.listofjoints)
+        {
+            for (int i = 0; i < joint.localTranslation.Count; i++)
+            {
+                joint.localTranslation[i] = joint.localTranslation[i] / factor;
+            }
+            joint.offset = joint.offset / factor;
+
+            if (joint.endsite)
+                joint.endsite_offset = joint.endsite_offset / factor;
+        }
+    }
+
 
 }
 

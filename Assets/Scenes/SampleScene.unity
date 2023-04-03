@@ -137,19 +137,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 319b7da7a4c04d14ab569661646c548d, type: 3}
       propertyPath: m_LocalScale.x
-      value: 100
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 319b7da7a4c04d14ab569661646c548d, type: 3}
       propertyPath: m_LocalScale.y
-      value: 100
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 319b7da7a4c04d14ab569661646c548d, type: 3}
       propertyPath: m_LocalScale.z
-      value: 100
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 319b7da7a4c04d14ab569661646c548d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -124
+      value: -11.2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 319b7da7a4c04d14ab569661646c548d, type: 3}
       propertyPath: m_LocalPosition.y
@@ -190,6 +190,18 @@ PrefabInstance:
     - target: {fileID: -1985206180601970709, guid: 319b7da7a4c04d14ab569661646c548d, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -1336922371389865969, guid: 319b7da7a4c04d14ab569661646c548d, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -1336922371389865969, guid: 319b7da7a4c04d14ab569661646c548d, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -1336922371389865969, guid: 319b7da7a4c04d14ab569661646c548d, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 319b7da7a4c04d14ab569661646c548d, type: 3}
       propertyPath: m_Name
@@ -256,7 +268,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22c101aedf3ed1e4b87ec635e18e3fa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Scale: 0.006666667
   draw_listofjoints: []
   skeletonMap: {fileID: 0}
 --- !u!114 &702006525
@@ -448,7 +459,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 120, z: 100}
+  m_LocalPosition: {x: 0, y: 1.39, z: 3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

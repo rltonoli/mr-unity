@@ -56,6 +56,7 @@ public class main : MonoBehaviour
         // Reads a BVH to be used as source to motion retargeting
         Animation anim;
         anim = bvh.ReadBVHFile(Application.dataPath + "/data/input/Mao_na_frente_mcp.bvh");
+        anim.rescale(100);
         //anim = bvh.ReadBVHFile(Application.dataPath + "/data/input/RArmRotTest.bvh");
 
 
@@ -64,7 +65,8 @@ public class main : MonoBehaviour
         GameObject objSrcSkeleton = new GameObject("Source Skeleton");
         objSrcSkeleton.transform.position = Vector3.zero;
         draw_skeleton drawSrcSkeleton = objSrcSkeleton.AddComponent<draw_skeleton>();
-        drawSrcSkeleton.Draw(anim, objSrcSkeleton);
+        drawSrcSkeleton.Draw(anim, objSrcSkeleton, 100);
+        
 
         // Creates the mapping of the source skeleton
         //GameObject objMappedSrcSkeleton = new GameObject("Mapped Source Skeleton");
@@ -75,8 +77,10 @@ public class main : MonoBehaviour
         // Reads the surface data of the source animation
         Surface srcSurface = objSrcSkeleton.AddComponent<Surface>();
         srcSurface.ReadSourceSurfaceFile(Application.dataPath + "/data/surface/mocap_surface_rodolfo.csv");
-        srcSurface.DrawSurface();
+        //srcSurface.rescale(100);
+        srcSurface.DrawSurface(1f);
 
+        objSrcSkeleton.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
 
         // Instantiate the model as an Animation object ("reads" the model/character)
         anim_talita = model.GenerateFromModel("Talita", talitaModel);
@@ -84,6 +88,11 @@ public class main : MonoBehaviour
         SkeletonMap mapTalita = talitaModel.AddComponent<SkeletonMap>();
         mapTalita.anim = anim_talita;
         mapTalita.SetSkeletonModel("Talita");
+
+        Surface tgtSurface = talitaModel.AddComponent<Surface>();
+        tgtSurface.ReadTargetSurfaceFile(Application.dataPath + "/data/surface/character_surface_talita.csv");
+        tgtSurface.DrawSurface(0.01f);
+
         // Adds the retargeting component
         retargeting mrTalita = talitaModel.AddComponent<retargeting>();
 

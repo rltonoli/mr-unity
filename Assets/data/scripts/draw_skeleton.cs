@@ -6,7 +6,6 @@ using UnityEngine;
 //TODO: Maybe change this name to bvh_skeleton
 public class draw_skeleton : MonoBehaviour
 {
-    public float Scale = 1/150f;
     public List<GameObject> draw_listofjoints = new List<GameObject>();
     public Animation anim;
     public SkeletonMap skeletonMap;
@@ -26,7 +25,7 @@ public class draw_skeleton : MonoBehaviour
         }
     }
 
-    public void Draw(Animation anim, GameObject holder)
+    public void Draw(Animation anim, GameObject holder, int scale)
     {
 
         if (this.anim != null)
@@ -47,14 +46,15 @@ public class draw_skeleton : MonoBehaviour
         rootObj.name = this.anim.root.name;
         rootObj.transform.SetParent(holder.transform);
         //rootObj.transform.localPosition = anim.root.localTranslation[0];
-        rootObj.transform.localPosition = this.anim.root.offset;
+        rootObj.transform.localPosition = this.anim.root.offset * scale;
+        //rootObj.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
         this.anim.root.Object = rootObj;
         draw_listofjoints.Add(rootObj);
 
         // Start to iterate creating every other joint
         foreach (Joint child in this.anim.root.children)
         {
-            GameObject dummy = createObjects(rootObj, child);
+            GameObject dummy = createObjects(rootObj, child, scale);
         }
 
         //empty_holder.transform.localScale = new Vector3(Scale, Scale, Scale);
@@ -62,7 +62,7 @@ public class draw_skeleton : MonoBehaviour
         TestJoints(this.anim);
     }
 
-    private GameObject createObjects(GameObject parent, Joint child)
+    private GameObject createObjects(GameObject parent, Joint child, int scale)
     {
         //Receives the GameObject that represents the parent joint and the Joint child
 
@@ -73,7 +73,8 @@ public class draw_skeleton : MonoBehaviour
         childObj.name = child.name;
         childObj.transform.SetParent(parent.transform);
         //childObj.transform.localPosition = child.localTranslation[0];
-        childObj.transform.localPosition = child.offset;
+        childObj.transform.localPosition = child.offset* scale;
+        //childObj.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f)/parent.transform.lossyScale[0];
         //Adds a reference to the joint GameObject in the respective Joint
         child.Object = childObj;
 
@@ -83,8 +84,10 @@ public class draw_skeleton : MonoBehaviour
         bone.transform.SetParent(parent.transform);
         float boneSize = Vector3.Distance(new Vector3(0.0f,0.0f,0.0f), childObj.transform.localPosition);
         //bone.transform.localPosition = child.localTranslation[0] / 2;
-        bone.transform.localPosition = child.offset / 2;
-        bone.transform.localScale = new Vector3(0.6f, boneSize / 2, 0.6f);
+        bone.transform.localPosition = child.offset * scale / 2;
+
+        bone.transform.localScale = new Vector3(0.2f, boneSize / 2, 0.2f);
+
         //Adds a reference to the bone GameObject to a list called "bones" in the parent's Joint refenrece.
         child.parent.bones.Add(bone);
 
@@ -100,7 +103,7 @@ public class draw_skeleton : MonoBehaviour
         {
             foreach (Joint respective_child in child.children)
             {
-                createObjects(childObj, respective_child);
+                createObjects(childObj, respective_child, scale);
             }
         }
 
@@ -124,7 +127,7 @@ public class draw_skeleton : MonoBehaviour
         Surface surface = GetComponent<Surface>();
         if (surface != null )
         {
-            surface.DrawFrame();
+            surface.UpdateMeshes();
         }
 
 
