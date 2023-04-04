@@ -45,7 +45,57 @@ ModelImporter:
   - first:
       74: 353531534896593704
     second: Talita|idle.004
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Cabelo_Talita
+    second: {fileID: 2100000, guid: df3d5c39a77768c43a8d8e108d0e900e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Talita_Eye_brownlight
+    second: {fileID: 2100000, guid: 2fb623c4a1151e6489f322a55cc9c840, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Talita_Eyebrow
+    second: {fileID: 2100000, guid: 5975157ac46269543a871cf567212fc2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Talita_Eyelashes
+    second: {fileID: 2100000, guid: ec86a26fd49cf654b85f04be3f57bc5b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Talita_Teeth
+    second: {fileID: 2100000, guid: d6b81e4c17a25ed47acb9cccef91a87e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Talita_Tongue
+    second: {fileID: 2100000, guid: 589f1c27f961e3140b65a10d2498bc36, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: botao
+    second: {fileID: 2100000, guid: d9a2d66d5a304d34990a7de25c2a27ea, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: camisa
+    second: {fileID: 2100000, guid: 46a54e1b61505f94ab4440156ca48d05, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: sapatilha
+    second: {fileID: 2100000, guid: b873ba83517d8db458ac28520caca439, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: tecido_saia
+    second: {fileID: 2100000, guid: 6acde79fa13f7f742a8a7a98b3796802, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
