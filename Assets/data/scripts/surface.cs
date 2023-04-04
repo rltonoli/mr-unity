@@ -111,6 +111,11 @@ public class Surface : MonoBehaviour
         CreateSurfacePoints();
 
         List<string[]> linedContent = ReadFile(filePath);
+
+        Vector3 reference = new Vector3(System.Convert.ToSingle(linedContent[linedContent.Count - 1][0], System.Globalization.CultureInfo.InvariantCulture),
+                                                                System.Convert.ToSingle(linedContent[linedContent.Count - 1][1], System.Globalization.CultureInfo.InvariantCulture),
+                                                                System.Convert.ToSingle(linedContent[linedContent.Count - 1][2], System.Globalization.CultureInfo.InvariantCulture));
+
         for (int i = 0; i < linedContent.Count-1; i++) // "-1" because the last line of the target surface data file was used in the (original) python version of this code
         {
             if (this.surfacePoints[i].pointType == "mesh")
@@ -118,11 +123,13 @@ public class Surface : MonoBehaviour
                 this.surfacePoints[i].lposition = new Vector3(System.Convert.ToSingle(linedContent[i][0], System.Globalization.CultureInfo.InvariantCulture),
                                                                 System.Convert.ToSingle(linedContent[i][1], System.Globalization.CultureInfo.InvariantCulture),
                                                                 System.Convert.ToSingle(linedContent[i][2], System.Globalization.CultureInfo.InvariantCulture));
-                this.surfacePoints[i].lposition = this.surfacePoints[i].lposition;
+                this.surfacePoints[i].lposition -= reference;
             }
             else
                 this.surfacePoints[i].radius = System.Convert.ToSingle(linedContent[i][0], System.Globalization.CultureInfo.InvariantCulture);
         }
+        
+        
 
         CreateSurfaceMeshes();
     }
@@ -131,25 +138,28 @@ public class Surface : MonoBehaviour
     {
         Joint joint;
         Joint childJoint;
+        Joint root;
         GameObject pointObj;
 
         foreach (SurfacePoint point in this.surfacePoints)
         {
             joint = this.skeletonMap.GetJoint(point.attachedJointName);
+            root = this.skeletonMap.GetJoint("Hips");
             if (point.pointType == "mesh")
             {
                 pointObj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                 pointObj.name = point.name;
                 pointObj.transform.SetParent(joint.Object.transform);
-                pointObj.transform.localScale = new Vector3(scale, scale, scale);
+                
                 if (point.lposition.magnitude == 0f) // for source surface points
                 {
                     pointObj.transform.localPosition = point.matrix.GetPosition();
                     pointObj.transform.localRotation = point.matrix.rotation;
                 }
                 else // for target surface points
-                    pointObj.transform.localPosition = point.lposition;
+                    pointObj.transform.localPosition = point.lposition + root.Object.transform.position - joint.Object.transform.position;
                 point.Object = pointObj;
+                pointObj.transform.localScale = new Vector3(scale, scale, scale);
             }
             else if (point.pointType == "limb")
             {
