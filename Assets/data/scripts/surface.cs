@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Unity.VisualScripting;
+using UnityEditor.UI;
 using UnityEngine;
 
 
@@ -14,6 +15,9 @@ public class Surface : MonoBehaviour
     public List<MeshTriangle> bodyMesh = new List<MeshTriangle>();
 
     public SkeletonMap skeletonMap;
+
+
+    public float primitiveScales = 1f;
 
     private bool CheckFile(string filePath)
     {
@@ -194,12 +198,17 @@ public class Surface : MonoBehaviour
 
 
 
-    public void UpdateMeshes()
+    public void UpdateMeshes(GameObject scale2obj)
     {
+        float scale = 1f;
+        if (scale2obj != null)
+        {
+            scale = 1 / scale2obj.transform.localScale.y;
+        }
         foreach (MeshTriangle mt in headMesh)
-            mt.Update();
+            mt.Update(scale);
         foreach (MeshTriangle mt in bodyMesh)
-            mt.Update();
+            mt.Update(scale);
     }
 
 
@@ -303,11 +312,16 @@ public class MeshTriangle
         this.edges.Add(SurfaceUtils.DrawPrimitive(PrimitiveType.Cylinder, "meshline_" + this.vertices[2].Object.name + "_" + this.vertices[0].Object.name, this.vertices[2].Object, this.vertices[0].Object, 0.2f));
     }
 
-    public void Update()
+    public void Update(float scale)
     {
-        SurfaceUtils.DrawPrimitive(this.edges[0], this.vertices[0].Object, this.vertices[1].Object);
-        SurfaceUtils.DrawPrimitive(this.edges[1], this.vertices[1].Object, this.vertices[2].Object);
-        SurfaceUtils.DrawPrimitive(this.edges[2], this.vertices[2].Object, this.vertices[0].Object);
+        SurfaceUtils.DrawPrimitive(this.edges[0], this.vertices[0].Object, this.vertices[1].Object, scale);
+        SurfaceUtils.DrawPrimitive(this.edges[1], this.vertices[1].Object, this.vertices[2].Object, scale);
+        SurfaceUtils.DrawPrimitive(this.edges[2], this.vertices[2].Object, this.vertices[0].Object, scale);
+    }
+
+    public Vector3 GetCentroid()
+    {
+        return (vertices[0].Object.transform.position + vertices[1].Object.transform.position + vertices[2].Object.transform.position) / 3.0f;
     }
 
 }
@@ -333,7 +347,7 @@ public static class SurfaceUtils
         return obj;
     }
 
-    public static GameObject DrawPrimitive(GameObject obj, GameObject parent, GameObject child)
+    public static GameObject DrawPrimitive(GameObject obj, GameObject parent, GameObject child, float scale)
     {
         // Creates an object of the specified type starting at parent and ending at child
         float size = Vector3.Distance(parent.transform.position, child.transform.position);
@@ -343,7 +357,7 @@ public static class SurfaceUtils
         obj.transform.Rotate(axis, rotAngle);
         obj.transform.localPosition = new Vector3(0f, 0f, 0f);
         obj.transform.position -= obj.transform.up * size / 2;
-        obj.transform.localScale = new Vector3(obj.transform.localScale.x, size / 2, obj.transform.localScale.z);
+        obj.transform.localScale = new Vector3(obj.transform.localScale.x, scale * size / 2, obj.transform.localScale.z);
         return obj;
     }
 }

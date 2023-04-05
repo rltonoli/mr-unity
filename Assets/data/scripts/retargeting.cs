@@ -21,6 +21,16 @@ public class retargeting : MonoBehaviour
         
     }
 
+    private void TryUpdateMesh()
+    {
+        Surface surface = GetComponent<Surface>();
+        if (surface != null)
+        {
+            //pick a random surface object to serve as scale parameter
+            surface.UpdateMeshes(surface.bodyMesh[0].vertices[0].Object);
+        }
+    }
+
     public void BoneRetargeting(SkeletonMap srcMap, SkeletonMap tgtMap, int frame)
     {
         Vector3 srcBone;
@@ -68,6 +78,8 @@ public class retargeting : MonoBehaviour
 
         }
 
+        TryUpdateMesh();
+
     }
 
     public void WorldRotRetargeting(SkeletonMap srcMap, SkeletonMap tgtMap, int frame)
@@ -105,9 +117,11 @@ public class retargeting : MonoBehaviour
 
         }
 
-         
+        TryUpdateMesh();
 
     }
+
+
 
 
 

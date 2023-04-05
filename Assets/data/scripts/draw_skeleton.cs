@@ -120,14 +120,14 @@ public class draw_skeleton : MonoBehaviour
             this.anim.listofjoints[i].previousRotation = draw_listofjoints[i].transform.rotation;
             draw_listofjoints[i].transform.localRotation = BVH2UnityRotation(this.anim.listofjoints[i].localEulerAngles[frame]);
         }
-        draw_listofjoints[0].transform.localPosition = this.anim.root.localTranslation[frame];
+        draw_listofjoints[0].transform.position = this.anim.root.localTranslation[frame];
         //Debug.Log(anim.GetJoint("RightArm").gameobject_joint.transform.localEulerAngles);
         //Debug.Log(anim.GetJoint("RightArm").localEulerAngles[frame]);
 
         Surface surface = GetComponent<Surface>();
         if (surface != null )
         {
-            surface.UpdateMeshes();
+            surface.UpdateMeshes(this.gameObject);
         }
 
 
