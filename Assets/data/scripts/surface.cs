@@ -144,7 +144,7 @@ public class Surface : MonoBehaviour
         foreach (SurfacePoint point in this.surfacePoints)
         {
             joint = this.skeletonMap.GetJoint(point.attachedJointName);
-            root = this.skeletonMap.GetJoint("Hips");
+            root = this.skeletonMap.GetJoint("Root");
             if (point.pointType == "mesh")
             {
                 pointObj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -157,7 +157,8 @@ public class Surface : MonoBehaviour
                     pointObj.transform.localRotation = point.matrix.rotation;
                 }
                 else // for target surface points
-                    pointObj.transform.localPosition = point.lposition + root.Object.transform.position - joint.Object.transform.position;
+                    //pointObj.transform.localPosition = point.lposition + root.Object.transform.position - joint.Object.transform.position;
+                    pointObj.transform.position = point.lposition + root.Object.transform.position;
                 point.Object = pointObj;
                 pointObj.transform.localScale = new Vector3(scale, scale, scale);
             }
@@ -328,7 +329,7 @@ public static class SurfaceUtils
             obj.transform.Rotate(axis, rotAngle);
         obj.transform.localPosition = new Vector3(0f, 0f, 0f);
         obj.transform.position -= obj.transform.up * size / 2;
-        obj.transform.localScale = new Vector3(radius, size / 2, radius);
+        obj.transform.localScale = new Vector3(radius, size / (2 * parent.transform.localScale[0]) , radius);
         return obj;
     }
 

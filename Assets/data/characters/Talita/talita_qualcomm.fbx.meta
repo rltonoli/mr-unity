@@ -79,6 +79,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Talita_expression_3_Female_generic_Young_caucasian_female
+    second: {fileID: 2100000, guid: ef19cddd0edfc8c4aa28e2548dd51d83, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: botao
     second: {fileID: 2100000, guid: d9a2d66d5a304d34990a7de25c2a27ea, type: 2}
   - first:
