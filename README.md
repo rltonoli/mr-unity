@@ -5,7 +5,9 @@ Unity/C# implementation of the dissertation: “Motion Retargeting Preserving Sp
   - Participants of a perceptual evaluation found that retargeted animations with the proposed method better matched the original motions.
 
 Available at: https://bit.ly/3lfh0FQ
+
 Rodolfo Luis Tonoli
+
 Supervisor: Profa. Dra. Paula Dornhofer Paro Costa
 
 # Work plan
@@ -46,5 +48,7 @@ Supervisor: Profa. Dra. Paula Dornhofer Paro Costa
 		- Draw old and new joint orientation
 
 **Other ~~cool(?)~~ things**
+
 	- Add other performer's animations as source
+  
 	- Add different characters as target
