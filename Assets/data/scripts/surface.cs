@@ -14,6 +14,8 @@ public class Surface : MonoBehaviour
     public List<MeshTriangle> headMesh = new List<MeshTriangle>();
     public List<MeshTriangle> bodyMesh = new List<MeshTriangle>();
 
+    public List<SurfacePoint> limbs = new List<SurfacePoint>();
+
     public SkeletonMap skeletonMap;
 
 
@@ -89,6 +91,7 @@ public class Surface : MonoBehaviour
         }
 
         CreateSurfaceMeshes();
+        GetLimbs();
     }
 
     public void rescale(int factor)
@@ -136,6 +139,7 @@ public class Surface : MonoBehaviour
         
 
         CreateSurfaceMeshes();
+        GetLimbs();
     }
 
     public void DrawSurface(float scale)
@@ -272,6 +276,17 @@ public class Surface : MonoBehaviour
 
     }
 
+    public void GetLimbs()
+    {
+        foreach (SurfacePoint p in this.surfacePoints)
+        {
+            if (p.pointType == "limb")
+            {
+                this.limbs.Add(p);
+            }
+        }
+    }
+
 }
 
 public class SurfacePoint
@@ -322,6 +337,13 @@ public class MeshTriangle
     public Vector3 GetCentroid()
     {
         return (vertices[0].Object.transform.position + vertices[1].Object.transform.position + vertices[2].Object.transform.position) / 3.0f;
+    }
+
+    public Vector3 GetNormalVector()
+    {
+        Vector3 v1 = vertices[1].Object.transform.position - vertices[0].Object.transform.position;
+        Vector3 v2 = vertices[2].Object.transform.position - vertices[0].Object.transform.position;
+        return Vector3.Cross(v2, v1);
     }
 
 }
