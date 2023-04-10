@@ -129,6 +129,12 @@ public class draw_skeleton : MonoBehaviour
         {
             surface.UpdateMeshes(this.gameObject);
         }
+        EgoCoordSystem egoCoordSystem = GetComponent<EgoCoordSystem>();
+        if (egoCoordSystem != null)
+        {
+            egoCoordSystem.Compute();
+            egoCoordSystem.DrawEgoCoord( egoCoordSystem.rightHandEgoCoord );
+        }
 
 
     }

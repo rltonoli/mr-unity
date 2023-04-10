@@ -343,7 +343,7 @@ public class MeshTriangle
     {
         Vector3 v1 = vertices[1].Object.transform.position - vertices[0].Object.transform.position;
         Vector3 v2 = vertices[2].Object.transform.position - vertices[0].Object.transform.position;
-        return Vector3.Cross(v2, v1);
+        return Vector3.Cross(v1, v2);
     }
 
 }

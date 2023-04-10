@@ -81,6 +81,7 @@ public class main : MonoBehaviour
 
         objSrcSkeleton.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
         EgoCoordSystem srcEgoCoord = objSrcSkeleton.AddComponent<EgoCoordSystem>();
+        srcEgoCoord.Configure();
 
         // Instantiate the model as an Animation object ("reads" the model/character)
         anim_talita = model.GenerateFromModel("Talita", talitaModel);
@@ -98,7 +99,7 @@ public class main : MonoBehaviour
 
 
 
-        //StartCoroutine(DrawWaiting(drawSrcSkeleton, mrTalita, mapSrcSkeleton, mapTalita, 0.01f));
+        StartCoroutine(DrawWaiting(drawSrcSkeleton, mrTalita, mapSrcSkeleton, mapTalita, 0.01f));
     }
 
     // Update is called once per frame
